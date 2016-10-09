@@ -8,10 +8,17 @@ public class WebAPIScript : MonoBehaviour
 
     public string url = "http://localhost:49931/api/users/";
     public Text teksti;
-    private string names;
+    private string nameOfUser;
+    public GameObject UserInfo;
+
+    void Awake()
+    {
+        UserInfo = GameObject.FindGameObjectWithTag("UserInfo");
+    }
 
     public void getPlayerNames()
     {
+        nameOfUser = UserInfo.GetComponent<UserInfoScript>().name;
         WWW www = new WWW(url);
 
         while (!www.isDone)
@@ -27,22 +34,27 @@ public class WebAPIScript : MonoBehaviour
         // Separates the players' names from the response and prints them
         string[] list = response.Split(new string[] { "\"" }, System.StringSplitOptions.None);
 
-        List<string> playerNames = new List<string>();
+        string playerNameFromMongo = "";
+
 
         for (int i = 0; i < list.Length; i++)
         {
             if (list[i].Equals("Name"))
             {
-                playerNames.Add(list[i + 2]);
+                if(list[i + 2] == nameOfUser)
+                {
+                    playerNameFromMongo = list[i + 2];
+                }
+                else
+                {
+                    playerNameFromMongo = "Couldn't find";
+                }
+                   
             }
         }
 
-        foreach (string name in playerNames)
-        {
-            names = names + name + "\n";
-        }
 
-        teksti.text = names;
+        teksti.text = playerNameFromMongo;
     }
 
     public void getUserDate()
@@ -75,11 +87,6 @@ public class WebAPIScript : MonoBehaviour
             }
         }
 
-        foreach (string name in playerNames)
-        {
-            names = names + name + "\n";
-        }
 
-        teksti.text = names;
     }
 }
