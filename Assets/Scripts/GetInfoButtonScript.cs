@@ -13,14 +13,23 @@ public class GetInfoButtonScript : MonoBehaviour
     public string url = "http://localhost:49931/api/users/";
     public Text teksti;
     private string nameOfUser;
+    public NameScript changeIcons;
+    public GameObject ManagerObj;
+
+    public GameObject brushTeethMorningObj;
+    public GameObject brushTeethNightObj;
 
     void Start()
     {
         UserInfo = GameObject.FindWithTag("UserInfo");
+        changeIcons = GetComponent<NameScript>();
     }
 
     public void GetUserInfo()
     {
+        bool brushTeethMorning = false;
+        bool brushTeethNight = false;
+
         /* string username = UserInfo.GetComponent<UserInfoScript>().name;
          string date = UserInfo.GetComponent<UserInfoScript>().chosenDate;
 
@@ -44,20 +53,48 @@ public class GetInfoButtonScript : MonoBehaviour
 
         string playerNameFromMongo = "";
 
-
         for (int i = 0; i < list.Length; i++)
         {
-            if (list[i].Equals(nameOfUser))
+             Debug.Log("Listasta kohta " + i + ": " + list[i] + "\n");
+            // Debug.Log("Inside for, i: " + i + "\n");
+            if (list[i].Equals("Name"))
             {
-                
-                playerNameFromMongo = list[i + 2];
-            }
-            else
-            {
-                playerNameFromMongo = "Couldn't find";
-            }
+                // Debug.Log("Listasta kohta " + i + ": " + list[i] + "\n");
+                if (list[i + 2] == nameOfUser)
+                {
 
+                    if (list[i - 11].Equals(":true,"))
+                    {
+                        Debug.Log("list i -12 : " + list[i - 12] + "\n");
+                        Debug.Log("list i -11 : " + list[i - 11] + "\n");
+                        brushTeethMorning = true;
+                    }
+
+                    Debug.Log("Inside if\n");
+                    playerNameFromMongo = list[i + 2];
+                    if (list[i - 9].Equals(":true,"))
+                    {
+                        Debug.Log("list i -10 : " + list[i - 10] + "\n");
+                        Debug.Log("list i -9 : " + list[i-9] + "\n");
+                        brushTeethMorning = true;
+                    }
+
+                    
+                       
+                    Debug.Log("brushteethmorning = " + brushTeethMorning + "\n");
+                    Debug.Log("brushteethnight = " + brushTeethNight + "\n");
+                    break;
+                }
+                else
+                {
+                    Debug.Log("Inside couldn't find\n");
+                    playerNameFromMongo = "Couldn't find";
+                }
+
+            }
         }
+        ManagerObj.GetComponent<ButtonScript>().IconPressed
+        brushTeethMorningObj.GetComponent<ActivateIconsScript>().ActivateIcons("Morning_bw");
 
         teksti.text = playerNameFromMongo;
     }
